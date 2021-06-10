@@ -1,0 +1,202 @@
+<?php
+include "../bakery_function.php";
+bakeryHeader();
+?>
+
+<?php
+session_start();
+$error='';
+
+if(isset($_POST['username'])){
+$username = $_POST['username'];
+$password = $_POST['password'];
+
+$connection = mysqli_connect("localhost","web2","web2");
+
+$username = stripcslashes($username);
+$password = stripcslashes($password);
+
+$db = mysqli_select_db($connection,"bakery_system");
+
+$query = mysqli_query($connection,"select * from login where password='$password' AND username='$username'");
+
+$row = mysqli_num_rows($query);
+
+if($row==true){
+	$_SESSION['login_user']=$username;
+	header("location:../order/createOrder.php");
+}
+else{
+	$error = "Username or Password Incorrect.";
+	//echo "<script type='text/javascript'>alert('$error');</script>";
+	//header("Refresh:0; url=login.php");
+}
+mysqli_close($connection);
+}
+?>
+
+<style>
+body{
+	margin:0;
+	background-image: url("../order/bread.png");
+	height:100%;
+	background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+p{
+	color: red;
+}
+
+ul {
+    list-style-type: none;
+    
+    padding: 0;
+    width: 15%;
+    background-color: #1d2023;
+    position: fixed;
+    height: 100%;
+    overflow: auto;
+}
+
+li a {
+	text-align:center;
+    display: block;
+    color: white;
+    padding: 8px 16px;
+    text-decoration: none;
+}
+
+li a.active {
+	text-align: left;
+	font-size:13px;
+    background-color: black;
+    color: white;
+    padding: 20px;
+}
+
+li a:hover:not(.active) {
+    background-color: #555;
+    color: white;
+}
+
+ @import url("https://fonts.googleapis.com/css?family=Poppins"); 
+
+.wrapper{
+	display:flex;
+	align-items: center; 
+	flex-direction:column;
+	justify-content: center; 
+	padding:50px;
+}
+
+ #formContent { 
+      -webkit-border-radius: 10px 10px 10px 10px; 
+      border-radius: 10px 10px 10px 10px; 
+      background: #fff; 
+      padding: 50px; 
+      width: 90%; 
+      max-width: 450px; 
+      position: relative; 
+      padding: 0px; 
+      -webkit-box-shadow: 0 30px 100px 0 rgba(0,0,0,0.3); 
+      box-shadow: 0 30px 100px 0 rgba(0,0,0,0.3); 
+      text-align: center; 
+      } 
+
+ input[type=button], input[type=submit], input[type=reset]  { 
+ 	background-color: #56baed; 
+ 	border: none; 
+ 	color: white; 
+ 	padding: 15px 80px; 
+ 	text-align: center; 
+ 	text-decoration: none; 
+ 	display: inline-block; 
+ 	text-transform: uppercase; 
+ 	font-size: 13px; 
+ 	-webkit-box-shadow: 0 10px 30px 0 rgba(95,186,233,0.4); 
+ 	box-shadow: 0 10px 30px 0 rgba(95,186,233,0.4); 
+ 	-webkit-border-radius: 5px 5px 5px 5px; 
+ 	border-radius: 5px 5px 5px 5px; 
+ 	margin: 5px 20px 40px 20px; 
+ 	-webkit-transition: all 0.3s ease-in-out; 
+ 	-moz-transition: all 0.3s ease-in-out; 
+ 	-ms-transition: all 0.3s ease-in-out; 
+ 	-o-transition: all 0.3s ease-in-out; 
+ 	transition: all 0.3s ease-in-out; 
+ 	}
+
+input[type=text]:focus{
+	background-color:#fff;
+	border-bottom:2px solid #5fbae9;
+}
+
+ input[type=text] { 
+ 	background-color: #f6f6f6; 
+ 	border: none; 
+ 	color: #0d0d0d; 
+ 	padding: 15px 32px; 
+ 	text-align: center; 
+ 	text-decoration: none;
+	
+	display: inline-block; 
+	font-size: 16px; 
+	margin: 5px; 
+	width: 85%; 
+	border: 2px solid #f6f6f6; 
+	-webkit-transition: all 0.5s ease-in-out; 
+	-moz-transition: all 0.5s ease-in-out; 
+	-ms-transition: all 0.5s ease-in-out; 
+	-o-transition: all 0.5s ease-in-out; 
+	transition: all 0.5s ease-in-out; 
+	-webkit-border-radius: 5px 5px 5px 5px; 
+	border-radius: 5px 5px 5px 5px; 
+	}
+
+	input[type=password]:focus{
+	background-color:#fff;
+	border-bottom:2px solid #5fbae9;
+}
+
+ input[type=password] { 
+ 	background-color: #f6f6f6; 
+ 	border: none; 
+ 	color: #0d0d0d; 
+ 	padding: 15px 32px; 
+ 	text-align: center; 
+ 	text-decoration: none;
+	
+	display: inline-block; 
+	font-size: 16px; 
+	margin: 5px; 
+	width: 85%; 
+	border: 2px solid #f6f6f6; 
+	-webkit-transition: all 0.5s ease-in-out; 
+	-moz-transition: all 0.5s ease-in-out; 
+	-ms-transition: all 0.5s ease-in-out; 
+	-o-transition: all 0.5s ease-in-out; 
+	transition: all 0.5s ease-in-out; 
+	-webkit-border-radius: 5px 5px 5px 5px; 
+	border-radius: 5px 5px 5px 5px; 
+	} 
+
+
+
+
+
+</style>
+
+
+
+<div class="wrapper"><div id="formContent">
+<h2>Sign In</h2><br>
+	
+	<form action="login.php" method="POST">
+	<input type="text" id="login" name="username" class="fadeIn second" placeholder="Username" required>
+	<input type="password" id="password" name="password" class="fadeIn third" placeholder="Password" required>
+	<input type="submit" name="connect" class="fadeIn fourth" value="Login">
+	<p><?php echo $error;?></p>
+	</form>
+
+</div></div>

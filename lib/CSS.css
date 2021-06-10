@@ -1,0 +1,151 @@
+#iconSearch{
+	background: url(../image/search.png) left no-repeat;
+	padding-left: 40px;
+	background-size: 40px 40px;
+}
+.InputSearch{
+	height:40;
+	width:400px;
+	font-size:12pt;
+}
+/* Set height of the grid so .sidenav can be 100% (adjust if needed) */
+    .row.content {height: 100%}
+    
+    /* Set gray background color and 100% height */
+    .sidenav {
+      background-color: #181919;
+      height: 100%;
+    }
+    
+    /* Set black background color, white text and some padding */
+    footer {
+      background-color: #555;
+      color: white;
+      padding: 15px;
+    }
+    
+    /* On small screens, set height to 'auto' for sidenav and grid */
+    @media screen and (max-width: 767px) {
+      .sidenav {
+        height: auto;
+        padding: 15px;
+      }
+      .row.content {height: auto;} 
+    }
+
+body{
+	background-image : url("../order/bread.png");
+	background-repeat: no-repeat;
+	height: 100%; 
+	background-position: center;
+	background-size: cover;
+}
+
+a.one{
+font-size:15pt;
+text-decoration: none;
+}
+
+ul.menu{
+	text-align:left;
+	list-style: none;
+	margin:0;
+	padding:0;
+	line-height:40px;
+}
+
+ul.drop{
+	text-align:left;
+	list-style: none;
+	margin:0;
+	padding:0;
+	line-height:35px;
+}
+
+ul.menu li{
+	color:#337AB7;
+	list-style: none;
+	border-radius:5px;
+}
+
+ul.menu li.xactive{
+	color:#337AB7;
+	list-style: none;
+	border-radius:5px;
+}
+
+ul.menu li.active,
+ul.menu li.active a{
+	color: white;
+	background-color: #bf2042;
+	border-radius:5px;
+	text-decoration:none;
+}
+
+ul.menu li.xactive:hover,
+ul.menu li.xactive:hover a{
+	color: #f1f1f1;
+	background-color: #337AB7;
+	text-decoration:none;
+}
+
+ul.drop li.xactive{
+	color:#337AB7;
+	list-style: none;
+	border-radius:5px;
+}
+
+ul.drop li.active,
+ul.drop li.active a{
+	color: white;
+	background-color: #bf2042;
+	border-radius:5px;
+	text-decoration:none;
+}
+
+ul.drop li.xactive:hover,
+ul.drop li.xactive:hover a{
+	color: #f1f1f1;
+	background-color: #337AB7;
+	text-decoration:none;
+}
+tr.one{
+	background-color:#dee2e8;
+}
+
+hr.one{
+	border-color:#979a9e;
+}
+
+h4.one{
+	font-family: 'Pacifico';
+	font-size: 18pt;
+	color:#dee2e8;
+	text-align:center;
+}
+
+.dropdown-btn {
+    padding: 6px 8px 6px 16px;
+    text-decoration: none;
+    font-size: 15pt;
+	height:40px;
+    color: #337AB7;
+    display: block;
+    border: none;
+	border-radius: 5px;
+    background: none;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    outline: none;
+}
+.dropdown-btn:hover {
+    color: #f1f1f1;
+	background-color: #337AB7;
+}
+
+/* Optional: Style the caret down icon */
+.fa-caret-down {
+    float: right;
+    padding-right: 8px;
+}
