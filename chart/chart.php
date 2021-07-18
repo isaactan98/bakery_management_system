@@ -6,82 +6,6 @@ if (!(isset($_SESSION['login_user']) && $_SESSION['login_user'] != '')) {
 	header("Location: ../login/login.php");
 }
 
-$orderDate = '';
-$dispatchDate = '';
-$Searchtype = '';
-$cust_Name = '';
-
-function getPost()
-{
-	$post = array();
-	$post[4] = $_POST['Searchtype'];
-	$post[1] = $_POST['SearchCust'];
-
-	return $post;
-}
-
-$con = mysqli_connect("localhost", "web2", "web2", "bakery_system");
-if ($con == false) {
-	echo "Connection Error";
-} else {
-	//initialize the array to store the process data
-	$jsonArray = array();
-	//check if there is any data returned by the SQL query
-
-	if (isset($_POST['checkDate'])) {
-		$orderDate = $_POST['orderDate'];
-		$dispatchDate = $_POST['dispatchDate'];
-		$result = mysqli_query($con, "SELECT type,orderDate,sum(quantity) as totalQuantity from product_order where orderDate between '$orderDate' and '$dispatchDate' group by type");
-		$jsonArray = array();
-		if (mysqli_num_rows($result) > 0) {
-			while ($row = mysqli_fetch_assoc($result)) {
-				$jsArrayItem = array();
-
-				$jsArrayItem['label'] = $row['type'];
-				$jsArrayItem['y'] = intval($row['totalQuantity']);
-				array_push($jsonArray, $jsArrayItem);
-			}
-		}
-	}
-
-	if (isset($_POST['cakeType'])) {
-		$Searchtype = $_POST['Searchtype'];
-
-		$data = getPost();
-
-		$result = mysqli_query($con, "SELECT type,sum(quantity) as totalQuantity,MONTHNAME(orderDate) as monthlySale from product_order where type Like '$data[4]' group by monthlySale order by monthlySale");
-		$jsonArray = array();
-		if (mysqli_num_rows($result) > 0) {
-			while ($row = mysqli_fetch_array($result)) {
-				$jsArrayItem = array();
-				$jsArrayItem['label'] = $row['monthlySale'];
-				$jsArrayItem['y'] = intval($row['totalQuantity']);
-				array_push($jsonArray, $jsArrayItem);
-			}
-		}
-	}
-
-
-	if (isset($_POST['Cust_order'])) {
-		$data = getPost();
-
-		$cust_Name = $_POST['SearchCust'];
-		$result = mysqli_query($con, "SELECT cust_Name,type,quantity from product_order where cust_Name like '$data[1]'");
-		$jsonArray = array();
-		if (mysqli_num_rows($result) > 0) {
-			while ($row = mysqli_fetch_array($result)) {
-				$jsArrayItem = array();
-				$jsArrayItem['label'] = $row['type'];
-				$jsArrayItem['y'] = intval($row['quantity']);
-				array_push($jsonArray, $jsArrayItem);
-			}
-		}
-	}
-}
-mysqli_close($con);
-
-
-
 ?>
 <!DOCTYPE HTML>
 <html>
@@ -246,8 +170,6 @@ mysqli_close($con);
 				<button id="showChart" class="btn btn-primary">Reset</button>
 				<button id="exportButton" class="btn btn-primary" type="button">Export as PDF</button>
 
-
-				<h1 style="color: black "><?php echo $orderDate ?> <?php echo $dispatchDate ?><?php echo $Searchtype ?><?php echo $cust_Name ?></h1>
 				<div class="col-sm-12">
 					<div id="chartContainer" style="height: 65%;"></div>
 				</div>
@@ -309,23 +231,24 @@ mysqli_close($con);
 		var end = $('#dispatchDate').val();
 		var start = $('#orderDate').val();
 		var url;
-		if(ctype!=null && cCust=="" && start==""&&end==""){
+		if(ctype!="" && cCust=="" && start==""&&end==""){
 			url = "http://localhost/bms/api/chart/details?cakeType="+ctype;
 		}
-		if(ctype==null && cCust!="" && start==""&&end==""){
+		else if(ctype=="" && cCust!="" && start==""&&end==""){
 			url = "http://localhost/bms/api/chart/details?custName="+cCust;
 		}
-		else if(ctype!=null && cCust!=""&& start==""&&end==""){
+		if(ctype=="" && cCust=="" && start!=""&&end!=""){
+			url = "http://localhost/bms/api/chart/details?start="+start+"&end="+end;
+		}
+		else if(ctype!="" && cCust!=""&& start==""&&end==""){
 			url = "http://localhost/bms/api/chart/details?cakeType="+ctype+"&custName="+cCust;
 		}
-		else if(ctype!=null && cCust==""&& start!=""&&end!=""){
+		else if(ctype!="" && cCust==""&& start!=""&&end!=""){
 			url = "http://localhost/bms/api/chart/details?cakeType="+ctype+"&start="+start+"&end="+end;
 		}
 		else{
-			url = "http://localhost/bms/api/chart/"+ctype+"/"+cCust+"?start="+start+"&end="+end;
+			url = "http://localhost/bms/api/chart/details?cakeType="+ctype+"&custName"+cCust+"&start="+start+"&end="+end;
 		}
-		
-		//alert(ctype);
 
 		$.ajax({
 			type: "GET",

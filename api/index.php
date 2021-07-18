@@ -155,6 +155,8 @@ $app->get('/chart/details', function (Request $request, Response $response, arra
         $sql = "SELECT type,sum(quantity) as totalQuantity, MONTHNAME(orderDate) as monthlySale, Year(orderDate) as yearSales from product_order where type Like '$cakeType' group by monthlySale order by monthlySale";
     } else if ($cakeType == null && $custName != null && $startDate == null && $endDate == null) {
         $sql = "SELECT cust_Name,type,quantity from product_order where cust_Name like '$custName'";
+    } else if ($cakeType == null && $custName == null && $startDate != null && $endDate != null) {
+        $sql = "SELECT type,orderDate,sum(quantity) as totalQuantity from product_order where orderDate between '$startDate' and '$endDate' group by type";
     } else if ($cakeType != null && $custName != null && $startDate == null && $endDate == null) {
         $sql = "SELECT cust_Name,type,sum(quantity) as totalQuantity from product_order where type Like '$cakeType' AND cust_Name like '$custName'";
     } else if ($cakeType != null && $custName == null && $startDate != null && $endDate != null) {
@@ -178,8 +180,12 @@ $app->get('/chart/details', function (Request $request, Response $response, arra
             if ($chart['totalQuantity'] == null) {
                 $jsArrayItem['label'] = $chart['type'];
                 $jsArrayItem['y'] = intval($chart['quantity']);
-            } else {
+            } else if($chart['type']==null){
                 $jsArrayItem['label'] = $chart['monthlySale'] . ' ' . $chart['yearSales'];
+                $jsArrayItem['y'] = intval($chart['totalQuantity']);
+            }
+            else{
+                $jsArrayItem['label'] = $chart['type'];
                 $jsArrayItem['y'] = intval($chart['totalQuantity']);
             }
 
