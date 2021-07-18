@@ -78,4 +78,38 @@ $app->post('/createOrder', function (Request $request, Response $response, array
     }
 });
 
+
+
+//Chart Display 
+$app->get('/chart', function (Request $request, Response $response, array $args) {
+    $jsonArray = array();
+
+    $sql = "SELECT type,sum(quantity) as totalQuantity FROM product_order group by type order by type";
+
+    try {
+        // Get DB Object
+        $db = new db();
+        // Connect
+        $db = $db->connect();
+
+        $stmt = $db->query($sql);
+        $jsArrayItem = array();
+        while($chart = $stmt->fetch(PDO::FETCH_ASSOC)){
+
+            $jsArrayItem['label'] = $chart['type'];
+            $jsArrayItem['y'] = intval($chart['totalQuantity']);
+    
+            array_push($jsonArray, $jsArrayItem);
+        }
+
+        echo json_encode($jsonArray, JSON_PRETTY_PRINT);
+    } catch (PDOException $e) {
+        $data = array(
+            "status" => "fail"
+        );
+        echo json_encode($data);
+    }
+});
+
+
 $app->run();
