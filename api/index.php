@@ -94,11 +94,11 @@ $app->get('/chart', function (Request $request, Response $response, array $args)
 
         $stmt = $db->query($sql);
         $jsArrayItem = array();
-        while($chart = $stmt->fetch(PDO::FETCH_ASSOC)){
+        while ($chart = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
             $jsArrayItem['label'] = $chart['type'];
             $jsArrayItem['y'] = intval($chart['totalQuantity']);
-    
+
             array_push($jsonArray, $jsArrayItem);
         }
 
@@ -111,5 +111,88 @@ $app->get('/chart', function (Request $request, Response $response, array $args)
     }
 });
 
+$app->get('/chart/highest', function (Request $request, Response $response, array $args) {
+    $jsonArray = array();
+
+    $sql = "SELECT type,sum(quantity) as totalQuantity from product_order group by type order by totalQuantity DESC";
+
+    try {
+        // Get DB Object
+        $db = new db();
+        // Connect
+        $db = $db->connect();
+
+        $stmt = $db->query($sql);
+        $jsArrayItem = array();
+        while ($chart = $stmt->fetch(PDO::FETCH_ASSOC)) {
+
+            $jsArrayItem['label'] = $chart['type'];
+            $jsArrayItem['y'] = intval($chart['totalQuantity']);
+
+            array_push($jsonArray, $jsArrayItem);
+        }
+
+        echo json_encode($jsonArray, JSON_PRETTY_PRINT);
+    } catch (PDOException $e) {
+        $data = array(
+            "status" => "fail"
+        );
+        echo json_encode($data);
+    }
+});
+
+$app->get('/chart/details', function (Request $request, Response $response, array $args) {
+    error_reporting(0);
+
+    $datas = json_encode($request->getQueryParams('details', null));
+    $jsonD = json_decode($datas, true);
+    $cakeType = $jsonD['cakeType'];
+    $custName = $jsonD['custName'];
+    $startDate = $jsonD['start'];
+    $endDate = $jsonD['end'];
+
+    if ($cakeType != null && $custName == null && $startDate == null && $endDate == null) {
+        $sql = "SELECT type,sum(quantity) as totalQuantity, MONTHNAME(orderDate) as monthlySale, Year(orderDate) as yearSales from product_order where type Like '$cakeType' group by monthlySale order by monthlySale";
+    } else if ($cakeType == null && $custName != null && $startDate == null && $endDate == null) {
+        $sql = "SELECT cust_Name,type,quantity from product_order where cust_Name like '$custName'";
+    } else if ($cakeType != null && $custName != null && $startDate == null && $endDate == null) {
+        $sql = "SELECT cust_Name,type,sum(quantity) as totalQuantity from product_order where type Like '$cakeType' AND cust_Name like '$custName'";
+    } else if ($cakeType != null && $custName == null && $startDate != null && $endDate != null) {
+        $sql = "SELECT type,orderDate,sum(quantity) as totalQuantity from product_order where type LIKE '$cakeType' and orderDate between '$startDate' and '$endDate' group by type";
+    } else {
+        $sql = "SELECT cust_Name,type,orderDate,sum(quantity) as totalQuantity from product_order where cust_Name like '$custName' and orderDate between '$startDate' and '$endDate' group by type";
+    }
+
+    $jsonArray = array();
+
+    try {
+        // Get DB Object
+        $db = new db();
+        // Connect
+        $db = $db->connect();
+
+        $stmt = $db->query($sql);
+        $jsArrayItem = array();
+        while ($chart = $stmt->fetch(PDO::FETCH_ASSOC)) {
+
+            if ($chart['totalQuantity'] == null) {
+                $jsArrayItem['label'] = $chart['type'];
+                $jsArrayItem['y'] = intval($chart['quantity']);
+            } else {
+                $jsArrayItem['label'] = $chart['monthlySale'] . ' ' . $chart['yearSales'];
+                $jsArrayItem['y'] = intval($chart['totalQuantity']);
+            }
+
+            array_push($jsonArray, $jsArrayItem);
+        }
+
+        echo json_encode($jsonArray, JSON_PRETTY_PRINT);
+    } catch (PDOException $e) {
+        $data = array(
+            "status" => "fail"
+        );
+        echo json_encode($data);
+    }
+});
 
 $app->run();

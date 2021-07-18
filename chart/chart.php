@@ -24,42 +24,14 @@ $con = mysqli_connect("localhost", "web2", "web2", "bakery_system");
 if ($con == false) {
 	echo "Connection Error";
 } else {
-
-	$result = mysqli_query($con, "SELECT type,sum(quantity) as totalQuantity FROM product_order group by type order by type");
 	//initialize the array to store the process data
 	$jsonArray = array();
 	//check if there is any data returned by the SQL query
-	// if (mysqli_num_rows($result) > 0) {
-	// 	while ($row = mysqli_fetch_assoc($result)) {
-	// 		$jsArrayItem = array();
-
-	// 		$jsArrayItem['label'] = $row['type'];
-	// 		$jsArrayItem['y'] = intval($row['totalQuantity']);
-
-	// 		array_push($jsonArray, $jsArrayItem);
-	// 	}
-
-	// 	//apend the above created object into the main array
-	// }
 
 	if (isset($_POST['checkDate'])) {
 		$orderDate = $_POST['orderDate'];
 		$dispatchDate = $_POST['dispatchDate'];
 		$result = mysqli_query($con, "SELECT type,orderDate,sum(quantity) as totalQuantity from product_order where orderDate between '$orderDate' and '$dispatchDate' group by type");
-		$jsonArray = array();
-		if (mysqli_num_rows($result) > 0) {
-			while ($row = mysqli_fetch_assoc($result)) {
-				$jsArrayItem = array();
-
-				$jsArrayItem['label'] = $row['type'];
-				$jsArrayItem['y'] = intval($row['totalQuantity']);
-				array_push($jsonArray, $jsArrayItem);
-			}
-		}
-	}
-	if (isset($_POST['highestOrder'])) {
-
-		$result = mysqli_query($con, "SELECT type,sum(quantity) as totalQuantity from product_order group by type order by totalQuantity DESC");
 		$jsonArray = array();
 		if (mysqli_num_rows($result) > 0) {
 			while ($row = mysqli_fetch_assoc($result)) {
@@ -132,7 +104,8 @@ mysqli_close($con);
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/2.3.5/jspdf.plugin.autotable.js"></script>
 	<script type="text/javascript">
 		var setChart;
-		window.onload = function() {
+
+		function chart() {
 			var chart = new CanvasJS.Chart("chartContainer", {
 				title: {
 					text: "Cake Order Chart"
@@ -254,34 +227,24 @@ mysqli_close($con);
 			</script>
 
 			<div class="one">
-				<form action="chart.php" method="POST" enctype="multipart/form-data">
+				<form action="" method="POST" id="filterChart" enctype="multipart/form-data">
 					<fieldset style="margin-top:10px;border:2px solid silver;padding:10px;">
 						<!--Enter text-->
 						<div class="form-group ">
+							<input id="Searchtype" type="text" name="Searchtype" placeholder="Search Cake Type" required>
 
+							<input id="SearchCust" type="text" name="SearchCust" oninput='this.value=this.value.toUpperCase()' placeholder="Customer Name">
 
-							<input type="text" name="Searchtype" placeholder="Search Cake Type">
-							<input type="submit" name="cakeType" class="btn btn-primary" value="Search Cake Type">
-
-
-							<input type="text" name="SearchCust" oninput='this.value=this.value.toUpperCase()' placeholder="Customer Name">
-							<input type="submit" name="Cust_order" class="btn btn-primary" value="Search Customer Order">
-
-							<!---->
-
-							<input type="date" class="datepicker" name="orderDate">
-							<input type="date" class="datepicker" name="dispatchDate">
-							<input type="submit" name="checkDate" value="Check Date" class="btn btn-primary">
-
-
-							<br><br>
-							<input type="submit" name="highestOrder" value="Check Highest Order" class="btn btn-primary">
-							<input type="submit" name="showChart" value="Show Chart" class="btn btn-primary">
-							<button id="exportButton" class="btn btn-primary" type="button">Export as PDF</button>
+							<input id="orderDate" type="date" class="datepicker" name="orderDate">
+							<input id="dispatchDate" type="date" class="datepicker" name="dispatchDate">
+							<input type="button" id="checkFilter" value="Check" class="btn btn-primary">
 
 						</div>
 					</fieldset>
 				</form>
+				<button id="highestOrder" class="btn btn-primary">Check Highest Order</button>
+				<button id="showChart" class="btn btn-primary">Reset</button>
+				<button id="exportButton" class="btn btn-primary" type="button">Export as PDF</button>
 
 
 				<h1 style="color: black "><?php echo $orderDate ?> <?php echo $dispatchDate ?><?php echo $Searchtype ?><?php echo $cust_Name ?></h1>
@@ -302,10 +265,80 @@ mysqli_close($con);
 			dataType: "json",
 			success: function(data, status, xhr) {
 				setChart = data;
+				chart();
 			},
 
 			error: function() {
 				alert(status);
+			},
+		});
+		$("#showChart").click(function() {
+			$.ajax({
+				type: "GET",
+				url: "http://localhost/bms/api/chart",
+				dataType: "json",
+				success: function(data, status, xhr) {
+					setChart = data;
+					chart();
+				},
+
+				error: function() {
+					alert(status);
+				},
+			});
+		});
+	});
+	$("#highestOrder").on('click', function() {
+		$.ajax({
+			type: "GET",
+			url: "http://localhost/bms/api/chart/highest",
+			dataType: "json",
+			success: function(data, status, xhr) {
+				setChart = data;
+				chart();
+			},
+
+			error: function() {
+				alert(status);
+			},
+		});
+	});
+	$("#checkFilter").click(function() {
+		var ctype = $('#Searchtype').val();
+		var cCust = $('#SearchCust').val();
+		var end = $('#dispatchDate').val();
+		var start = $('#orderDate').val();
+		var url;
+		if(ctype!=null && cCust=="" && start==""&&end==""){
+			url = "http://localhost/bms/api/chart/details?cakeType="+ctype;
+		}
+		if(ctype==null && cCust!="" && start==""&&end==""){
+			url = "http://localhost/bms/api/chart/details?custName="+cCust;
+		}
+		else if(ctype!=null && cCust!=""&& start==""&&end==""){
+			url = "http://localhost/bms/api/chart/details?cakeType="+ctype+"&custName="+cCust;
+		}
+		else if(ctype!=null && cCust==""&& start!=""&&end!=""){
+			url = "http://localhost/bms/api/chart/details?cakeType="+ctype+"&start="+start+"&end="+end;
+		}
+		else{
+			url = "http://localhost/bms/api/chart/"+ctype+"/"+cCust+"?start="+start+"&end="+end;
+		}
+		
+		//alert(ctype);
+
+		$.ajax({
+			type: "GET",
+			url: url,
+			dataType: "json",
+			success: function(data, status, xhr) {
+				setChart = data;
+				chart();
+			},
+
+			error: function(xhr) {
+				alert(xhr.responseText);
+				console.log(xhr.responseText);
 			},
 		});
 	});
