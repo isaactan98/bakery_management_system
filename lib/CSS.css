@@ -149,3 +149,13 @@ h4.one{
     float: right;
     padding-right: 8px;
 }
+
+@media screen and (max-width: 1124px) {
+	a{
+		font-size: 15px!important;
+	}
+	.dropdown-btn{
+		font-size: 15px!important;
+	}
+	
+}
