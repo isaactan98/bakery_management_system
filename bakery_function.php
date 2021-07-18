@@ -8,6 +8,7 @@ function spacing($space){
 
 function bakeryHeader(){
 	echo '<head>';
+	echo '<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>';
 	echo '<link rel="shortcut icon" href="../company logo/favicon.png">';
 	echo '<title>Miss Candy Bakery</title>';
 echo '</head>';
@@ -21,39 +22,39 @@ echo '</head>';
 }
 
 // create order
-function submitOrder(){
-	$name= $_POST['cust_Name'];
-	$hpn= $_POST['hpnNo'];
-	$cakeQuantity= $_POST['cakeQuantity'];
-	$cakeType= cakeType();
-	$cakeFlavour= cakeFlavour();
-	$cakeFilling= cakeFilling();
-	$cakeShape= cakeShape();
-	$cakeSize= cakeSize();
-	$cakeBoard= cakeBoard();
-	$cakePrice= $_POST['cakePrice'];
-	$orderDate= $_POST['orderDate'];
-	$dispatchDate= $_POST['dispatchDate'];
-	$time= $_POST['time'];
-	$dispatchTime= $_POST['dispatchTime'];
-	$dispatchPlace= $_POST['dispatchPlace'];
-	$remark= $_POST['remark'];
-	$status= "pending";
+// function submitOrder(){
+// 	$name= $_POST['cust_Name'];
+// 	$hpn= $_POST['hpnNo'];
+// 	$cakeQuantity= $_POST['cakeQuantity'];
+// 	$cakeType= cakeType();
+// 	$cakeFlavour= cakeFlavour();
+// 	$cakeFilling= cakeFilling();
+// 	$cakeShape= cakeShape();
+// 	$cakeSize= cakeSize();
+// 	$cakeBoard= cakeBoard();
+// 	$cakePrice= $_POST['cakePrice'];
+// 	$orderDate= $_POST['orderDate'];
+// 	$dispatchDate= $_POST['dispatchDate'];
+// 	$time= $_POST['time'];
+// 	$dispatchTime= $_POST['dispatchTime'];
+// 	$dispatchPlace= $_POST['dispatchPlace'];
+// 	$remark= $_POST['remark'];
+// 	$status= "pending";
 	
-	$con= mysqli_connect("localhost","web2","web2","bakery_system");
-	if(!$con){
-		echo "Failed to connect: ".mysqli_connect_error();
-	}
-	else{
-		$sql= "INSERT into product_order(cust_Name, cust_HPN, quantity, type, flavour, filling, shape, size, board, price, orderDate, dispatchDate, dispatchTime, dispatchDay, dispatchPlace, remark, status)
-		VALUES('$name','$hpn','$cakeQuantity','$cakeType','$cakeFlavour', '$cakeFilling', '$cakeShape', '$cakeSize', '$cakeBoard', '$cakePrice','$orderDate','$dispatchDate', '$dispatchTime', '$time', '$dispatchPlace', '$remark', '$status')";
+// 	if(!$con){
+// 		echo "Failed to connect: ".mysqli_connect_error();
+// 	}
+// 	else{
+// 		$sql= "INSERT into product_order(cust_Name, cust_HPN, quantity, type, flavour, filling, shape, size, board, price, orderDate, dispatchDate, dispatchTime, dispatchDay, dispatchPlace, remark, status)
+// 		VALUES('$name','$hpn','$cakeQuantity','$cakeType','$cakeFlavour', '$cakeFilling', '$cakeShape', '$cakeSize', '$cakeBoard', '$cakePrice','$orderDate','$dispatchDate', '$dispatchTime', '$time', '$dispatchPlace', '$remark', '$status')";
 		
-		$qry= mysqli_query($con,$sql);
-		if(!$qry){
-			echo "Error submitting order";
-		}
-	}
-}
+// 		$qry= mysqli_query($con,$sql);
+// 		if(!$qry){
+// 			echo "Error submitting order";
+// 		}
+// 	}
+// }
+
 
 //delete order
 function deleteOrder(){

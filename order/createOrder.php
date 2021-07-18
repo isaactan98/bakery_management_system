@@ -5,7 +5,7 @@ if (!(isset($_SESSION['login_user']) && $_SESSION['login_user'] != '')) {
 	header ("Location: ../login/login.php");
 }
 if(isSet($_POST['submitOrder'])){
-	submitOrder();
+	//submitOrder();
 }
 ?>
 
@@ -159,7 +159,7 @@ bakeryHeader();
 		<div class="col-sm-9">
 			<?php
 			if(isSet($_POST['nextOrder'])){
-				submitOrder();
+				//submitOrder();
 				$custName= $_POST['cust_Name'];
 				$custHpn= $_POST['hpnNo'];
 			?>
