@@ -11,8 +11,10 @@ function bakeryHeader(){
 	echo '<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>';
 	echo '<link rel="shortcut icon" href="../company logo/favicon.png">';
 	echo '<link rel="stylesheet" href="../lib/CSS.css">';
+	echo '<link rel="stylesheet" href="../lib/w3.css">';
+	echo '<link rel="stylesheet" href="../lib/boot3.css">';
 	echo '<title>Miss Candy Bakery</title>';
-echo '</head>';
+	echo '</head>';
 }
 
 function bakeryHeaderIn(){
