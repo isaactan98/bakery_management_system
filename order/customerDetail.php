@@ -13,11 +13,16 @@ bakeryHeader();
 		border-radius: 5px;
 		min-height: 680px;
 	}
+	.inner{
+		padding: 5rem;
+	}
 </style>
 
 <body>
 	<div class="col-sm-9">
 		<div class="one">
+			<h2>Customer Order Details</h2>
+			<div class="inner">
 
 			<?php
 			if (isset($_POST['orderDetail'])) {
