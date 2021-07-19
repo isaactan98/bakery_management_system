@@ -1,4 +1,5 @@
 <?php
+include "config.php";
 // spacing
 function spacing($space){
 	for($i=1;$i<=$space;$i++){
@@ -115,17 +116,18 @@ function updateOrderPT(){
 
 // pending order
 function pendingOrder(){
-	$con = mysqli_connect("localhost","web2","web2","bakery_system");
+	//$con = mysqli_connect("localhost","web2","web2","bakery_system");
 	$status="pending";
-	if(!$con){
-		echo 'failed to connect:'.mysqli_connect_error();
-		exit;
-	}
-	else{
+	// if(!$con){
+	// 	echo 'failed to connect:'.mysqli_connect_error();
+	// 	exit;
+	// }
+	// else{
+		global $con;
 		$sql= "SELECT * from product_order WHERE status='".$status."' ORDER BY cust_ID ASC";
 		$qry= mysqli_query($con,$sql);
 		return $qry;
-	}
+	//}
 }	
 // ready order
 function doneOrder(){

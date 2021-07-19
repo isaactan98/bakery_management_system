@@ -79,6 +79,10 @@ function hidefield(){
  document.getElementById('sizeInput').style.display='none';
  document.getElementById('boardInput').style.display='none';
 }
+
+function redirect(){
+		window.location = "viewOrder.php?page=1&method=4&searchValue=";
+	}
 </script>
 <?php
 include "../bakery_function.php";
@@ -86,6 +90,33 @@ bakeryHeader();
 if(isSet($_POST['updateOrder'])){
 	$custDetail= getMemberDetailPT();
 }
+
+
+?>
+<style>
+	div.one {
+		background-color: white;
+		padding: 10px;
+		padding-top: 0px;
+		padding-bottom: 20px;
+		margin-top: 10;
+		border-radius: 5px;
+		min-height: 680px;
+	}
+
+	.inner {
+		padding: 5rem;
+	}
+</style>
+
+<body>
+	<div class="col-sm-9">
+		<div class="one">
+			<h2>Customer Order Details</h2>
+			<div class="inner">
+
+				<?php
+
 $row= mysqli_fetch_assoc($custDetail);
 $custID= $row['cust_ID'];
 $custName= $row['cust_Name'];
@@ -149,7 +180,7 @@ echo 'Dispatch Time: <input type="time" name="dispatchTime" value="'.$dispatchTi
 day($dispatchDay); // AM/PM
 echo 'Dispatch Place: <input type= "text" name= "dispatchPlace" value="'.$dispatchPlace.'" required><br><br>';
 echo "Remark: <br><textarea style='resize:none' name='remark' rows='10'cols='30' >$remark</textarea><br><br>";
-echo '<input type="submit" name="backToView" value="Back">';
+echo '<input type="button" name="backToView" onclick="redirect()" value="Back">';
 echo '<input type="submit" name="updateDetail" value="UPDATE">';
 echo '</form>';
 echo '</body></div>';

@@ -1,5 +1,6 @@
 <?php
 include "../bakery_function.php";
+include "../config.php";
 bakeryHeader();
 ?>
 
@@ -11,14 +12,10 @@ if(isset($_POST['username'])){
 $username = $_POST['username'];
 $password = $_POST['password'];
 
-$connection = mysqli_connect("localhost","web2","web2");
-
 $username = stripcslashes($username);
 $password = stripcslashes($password);
 
-$db = mysqli_select_db($connection,"bakery_system");
-
-$query = mysqli_query($connection,"select * from login where password='$password' AND username='$username'");
+$query = mysqli_query($con,"select * from login where password='$password' AND username='$username'");
 
 $row = mysqli_num_rows($query);
 

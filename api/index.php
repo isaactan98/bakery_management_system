@@ -11,6 +11,9 @@ $app->get('/', function ($request, $response, $args) {
     return $response->withStatus(200)->write('Hello World!');
 });
 
+// -------------------------------------------------------------------------------------------------------
+//  Order Api 
+// -------------------------------------------------------------------------------------------------------
 //Submit Order 
 $app->post('/createOrder', function (Request $request, Response $response, array $args) {
     $inputJSON = file_get_contents('php://input');
@@ -79,8 +82,9 @@ $app->post('/createOrder', function (Request $request, Response $response, array
 });
 
 
-
-//Chart Display 
+// -------------------------------------------------------------------------------------------------------
+//  Chart Api 
+// -------------------------------------------------------------------------------------------------------
 $app->get('/chart', function (Request $request, Response $response, array $args) {
     $jsonArray = array();
 
@@ -200,5 +204,6 @@ $app->get('/chart/details', function (Request $request, Response $response, arra
         echo json_encode($data);
     }
 });
+// -------------------------------------------------------------------------------------------------------
 
 $app->run();

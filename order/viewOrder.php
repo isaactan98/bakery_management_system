@@ -1,5 +1,6 @@
 <?php
 include "../bakery_function.php";
+include "../config.php";
 session_start();
 if (!(isset($_SESSION['login_user']) && $_SESSION['login_user'] != '')) {
 	header ("Location: ../login/login.php");
@@ -179,7 +180,7 @@ if(isSet($_POST['updateDetail'])){
 				}
 			}
 			$recordPerPage=10;
-			$con=mysqli_connect("localhost","web2","web2","bakery_system");	
+			//$con=mysqli_connect("localhost","web2","web2","bakery_system");	
 			$rs_result = mysqli_query($con,$sql);
 			$row = mysqli_fetch_assoc($rs_result); 
 			$total_records = $row['noOfRecord']; 
@@ -400,6 +401,7 @@ function search($searchKey,$method){
 	echo '</div>';
 }
 function displayAll(){
+	global $con;
 	$recordPerPage=10;
 	$method= $_GET['method'];
 	$searchValue= $_GET['searchValue'];
@@ -413,7 +415,7 @@ function displayAll(){
 		$page==1;
 	
 	$start_from=($page-1)*$recordPerPage;
-	$con=mysqli_connect("localhost","web2","web2","bakery_system");
+	//$con=mysqli_connect("localhost","web2","web2","bakery_system");
 
 	//select recordPerPage records
 	$sql = "SELECT * FROM product_order WHERE status='pending' ORDER BY cust_ID ASC LIMIT $start_from, $recordPerPage"; 
