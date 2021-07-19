@@ -183,7 +183,7 @@ if (!(isset($_SESSION['login_user']) && $_SESSION['login_user'] != '')) {
 	$(document).ready(function() {
 		$.ajax({
 			type: "GET",
-			url: "http://localhost/bms/api/chart",
+			url: "http://localhost/bakery_management_system/api/chart",
 			dataType: "json",
 			success: function(data, status, xhr) {
 				setChart = data;
@@ -197,7 +197,7 @@ if (!(isset($_SESSION['login_user']) && $_SESSION['login_user'] != '')) {
 		$("#showChart").click(function() {
 			$.ajax({
 				type: "GET",
-				url: "http://localhost/bms/api/chart",
+				url: "http://localhost/bakery_management_system/api/chart",
 				dataType: "json",
 				success: function(data, status, xhr) {
 					setChart = data;
@@ -213,7 +213,7 @@ if (!(isset($_SESSION['login_user']) && $_SESSION['login_user'] != '')) {
 	$("#highestOrder").on('click', function() {
 		$.ajax({
 			type: "GET",
-			url: "http://localhost/bms/api/chart/highest",
+			url: "http://localhost/bakery_management_system/api/chart/highest",
 			dataType: "json",
 			success: function(data, status, xhr) {
 				setChart = data;
@@ -231,23 +231,19 @@ if (!(isset($_SESSION['login_user']) && $_SESSION['login_user'] != '')) {
 		var end = $('#dispatchDate').val();
 		var start = $('#orderDate').val();
 		var url;
-		if(ctype!="" && cCust=="" && start==""&&end==""){
-			url = "http://localhost/bms/api/chart/details?cakeType="+ctype;
+		if (ctype != "" && cCust == "" && start == "" && end == "") {
+			url = "http://localhost/bakery_management_system/api/chart/details?cakeType=" + ctype;
+		} else if (ctype == "" && cCust != "" && start == "" && end == "") {
+			url = "http://localhost/bakery_management_system/api/chart/details?custName=" + cCust;
 		}
-		else if(ctype=="" && cCust!="" && start==""&&end==""){
-			url = "http://localhost/bms/api/chart/details?custName="+cCust;
-		}
-		if(ctype=="" && cCust=="" && start!=""&&end!=""){
-			url = "http://localhost/bms/api/chart/details?start="+start+"&end="+end;
-		}
-		else if(ctype!="" && cCust!=""&& start==""&&end==""){
-			url = "http://localhost/bms/api/chart/details?cakeType="+ctype+"&custName="+cCust;
-		}
-		else if(ctype!="" && cCust==""&& start!=""&&end!=""){
-			url = "http://localhost/bms/api/chart/details?cakeType="+ctype+"&start="+start+"&end="+end;
-		}
-		else{
-			url = "http://localhost/bms/api/chart/details?cakeType="+ctype+"&custName"+cCust+"&start="+start+"&end="+end;
+		if (ctype == "" && cCust == "" && start != "" && end != "") {
+			url = "http://localhost/bakery_management_system/api/chart/details?start=" + start + "&end=" + end;
+		} else if (ctype != "" && cCust != "" && start == "" && end == "") {
+			url = "http://localhost/bakery_management_system/api/chart/details?cakeType=" + ctype + "&custName=" + cCust;
+		} else if (ctype != "" && cCust == "" && start != "" && end != "") {
+			url = "http://localhost/bakery_management_system/api/chart/details?cakeType=" + ctype + "&start=" + start + "&end=" + end;
+		} else {
+			url = "http://localhost/bakery_management_system/api/chart/details?cakeType=" + ctype + "&custName" + cCust + "&start=" + start + "&end=" + end;
 		}
 
 		$.ajax({

@@ -98,9 +98,9 @@ if (!(isset($_SESSION['login_user']) && $_SESSION['login_user'] != '')) {
 			// return true;
 			$.ajax({
 				type: "DELETE",
-				url: "http://localhost/bms/api/order/" + delID,
+				url: "http://localhost/bakery_management_system/api/order/" + delID,
 				dataType: "json",
-				contentType: "application/json",
+				// contentType: "application/json",
 
 				success: function(data, status, xhr) {
 					if (xhr.status == 200)
@@ -182,7 +182,8 @@ if (isset($_POST['updateDetail'])) {
 			$sql = "SELECT COUNT(cust_ID) as noOfRecord FROM product_order WHERE status='deliver'";
 
 			$recordPerPage = 10;
-			$con = mysqli_connect("localhost", "web2", "web2", "bakery_system");
+			// $con = mysqli_connect("localhost", "web2", "web2", "bakery_system");
+			global $con;
 			$rs_result = mysqli_query($con, $sql);
 			$row = mysqli_fetch_assoc($rs_result);
 			$total_records = $row['noOfRecord'];
@@ -290,7 +291,8 @@ function displayAll()
 		$page == 1;
 
 	$start_from = ($page - 1) * $recordPerPage;
-	$con = mysqli_connect("localhost", "web2", "web2", "bakery_system");
+	// $con = mysqli_connect("localhost", "web2", "web2", "bakery_system");
+	global $con;
 
 	//select recordPerPage records
 	$sql = "SELECT * FROM product_order WHERE status='deliver' ORDER BY cust_ID ASC LIMIT $start_from, $recordPerPage";
@@ -330,7 +332,7 @@ function displayAll()
 			// detail -----------------------------------
 			$custID = $row['cust_ID'];
 			echo '<td style="text-align:center;vertical-align:middle;">';
-			echo '<form action="customerDetail.php" method="post" style="display:inline">';
+			echo "<form action='customerDetail.php?page=$page&method=$method&searchValue=$searchValue' method='post' style='display:inline'>";
 			echo "<input type='hidden' name='IDtoView' value='$custID'>";
 			echo '<button type="submit" title="Details" name="orderDetail" style="margin-right:2;padding:4;" class="btn btn-primary fa fa-info-circle" aria-hidden="true">';
 			echo '</form>';

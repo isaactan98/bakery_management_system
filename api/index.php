@@ -82,11 +82,11 @@ $app->post('/createOrder', function (Request $request, Response $response, array
 });
 
 // delete order
-$app -> delete('/order/{id}', function(Request $request, Response $response, array $args){
+$app->delete('/order/{id}', function (Request $request, Response $response, array $args) {
     $id = $args['id'];
 
     try {
-        $sql= "DELETE from product_order WHERE cust_ID= :id";
+        $sql = "DELETE from product_order WHERE cust_ID= :id";
 
         $db = new db();
         $db = $db->connect();
@@ -101,21 +101,21 @@ $app -> delete('/order/{id}', function(Request $request, Response $response, arr
 });
 
 // get all orders with order status (pending, done, deliver)
-$app -> get('/orders/{status}', function(Request $request, Response $response, array $args){
+$app->get('/orders/{status}', function (Request $request, Response $response, array $args) {
     $status = $args['status'];
-    
+
     $statusWhitelist = array("pending", "done", "deliver");
 
-    if(!in_array($status, $statusWhitelist)) $status = $statusWhitelist[0];
-    
+    if (!in_array($status, $statusWhitelist)) $status = $statusWhitelist[0];
+
     try {
-        $sql= "SELECT * from product_order WHERE status='$status' ORDER BY cust_ID ASC";
+        $sql = "SELECT * from product_order WHERE status='$status' ORDER BY cust_ID ASC";
         $db = new db();
         $db = $db->connect();
         $stmt = $db->query($sql);
         $orders = $stmt->fetchAll(PDO::FETCH_OBJ);
         $db = null;
-        
+
         echo json_encode($orders);
     } catch (PDOException $e) {
         $data = array("status" => "fail");
@@ -298,11 +298,10 @@ $app->get('/chart/details', function (Request $request, Response $response, arra
             if ($chart['totalQuantity'] == null) {
                 $jsArrayItem['label'] = $chart['type'];
                 $jsArrayItem['y'] = intval($chart['quantity']);
-            } else if($chart['type']==null){
+            } else if ($chart['type'] == null) {
                 $jsArrayItem['label'] = $chart['monthlySale'] . ' ' . $chart['yearSales'];
                 $jsArrayItem['y'] = intval($chart['totalQuantity']);
-            }
-            else{
+            } else {
                 $jsArrayItem['label'] = $chart['type'];
                 $jsArrayItem['y'] = intval($chart['totalQuantity']);
             }

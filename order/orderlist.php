@@ -476,10 +476,10 @@ $custHpn = $_POST['hpnNo'];
 
 		$.ajax({
 			type: "POST",
-			url: "http://localhost/bms/api/createOrder",
+			url: "http://localhost/bakery_management_system/api/createOrder",
 			data: fromJson,
 			dataType: "json",
-			contentType: "application/json",
+			// contentType: "application/json",
 
 			success: function(data, status, xhr) {
 				if (data.rowcount > 0) {

@@ -687,13 +687,13 @@ if (isset($_POST['updateOrder'])) {
 						urlstring = fromJson['cust_ID'];
 						fromJson = JSON.stringify(fromJson);
 						console.log(fromJson);
-						
+
 						$.ajax({
 							type: "PUT",
-							url: "http://localhost/bms/api/updateOrder/" + urlstring,
+							url: "http://localhost/bakery_management_system/api/updateOrder/" + urlstring,
 							data: fromJson,
 							dataType: "json",
-							contentType: "application/json",
+							// contentType: "application/json",
 
 							success: function(data, status, xhr) {
 								if (status == 'success') {

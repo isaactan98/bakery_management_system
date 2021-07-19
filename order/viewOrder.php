@@ -99,9 +99,9 @@ if (!(isset($_SESSION['login_user']) && $_SESSION['login_user'] != '')) {
 			// return true;
 			$.ajax({
 				type: "DELETE",
-				url: "http://localhost/bms/api/order/" + delID,
+				url: "http://localhost/bakery_management_system/api/order/" + delID,
 				dataType: "json",
-				contentType: "application/json",
+				// contentType: "application/json",
 
 				success: function(data, status, xhr) {
 					if (xhr.status == 200)
@@ -281,7 +281,6 @@ if (isset($_POST['updateDetail'])) {
 <?php
 function displaySearchPanel()
 {
-	
 }
 
 function displayAll()
@@ -299,7 +298,6 @@ function displayAll()
 		$page == 1;
 
 	$start_from = ($page - 1) * $recordPerPage;
-	//$con=mysqli_connect("localhost","web2","web2","bakery_system");
 
 	//select recordPerPage records
 	$sql = "SELECT * FROM product_order WHERE status='pending' ORDER BY cust_ID ASC LIMIT $start_from, $recordPerPage";
