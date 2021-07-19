@@ -14,7 +14,7 @@ $app->get('/', function ($request, $response, $args) {
 // -------------------------------------------------------------------------------------------------------
 //  Order Api 
 // -------------------------------------------------------------------------------------------------------
-//Submit Order 
+//Submit Order
 $app->post('/createOrder', function (Request $request, Response $response, array $args) {
     $inputJSON = file_get_contents('php://input');
     $input = json_decode($inputJSON, TRUE);
@@ -39,7 +39,7 @@ $app->post('/createOrder', function (Request $request, Response $response, array
 
     try {
         $sql = "INSERT into product_order(cust_Name, cust_HPN, quantity, type, flavour, filling, shape, size, board, price, orderDate, dispatchDate, dispatchTime, dispatchDay, dispatchPlace, remark, status)
-		VALUES(:name,:hpn,:cakeQuantity,:cakeType,:cakeFlavour,:cakeFilling,:cakeShape,:cakeSize,:cakeBoard,:cakePrice,:orderDate,:dispatchDate,:time,:dispatchTime,:dispatchPlace,:remark,:status)";
+		VALUES(:name,:hpn,:cakeQuantity,:cakeType,:cakeFlavour,:cakeFilling,:cakeShape,:cakeSize,:cakeBoard,:cakePrice,:orderDate,:dispatchDate,:dispatchTime,:time,:dispatchPlace,:remark,:status)";
 
         $db = new db();
         // Connect
@@ -80,6 +80,120 @@ $app->post('/createOrder', function (Request $request, Response $response, array
         echo $e;
     }
 });
+
+// delete order
+$app -> delete('/order/{id}', function(Request $request, Response $response, array $args){
+    $id = $args['id'];
+
+    try {
+        $sql= "DELETE from product_order WHERE cust_ID= :id";
+
+        $db = new db();
+        $db = $db->connect();
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam(':id', $id);
+        $stmt->execute();
+    } catch (PDOException $e) {
+        $data = array("status" => "fail");
+        echo json_encode($data);
+    }
+    return $response;
+});
+
+// get all orders with order status (pending, done, deliver)
+$app -> get('/orders/{status}', function(Request $request, Response $response, array $args){
+    $status = $args['status'];
+    
+    $statusWhitelist = array("pending", "done", "deliver");
+
+    if(!in_array($status, $statusWhitelist)) $status = $statusWhitelist[0];
+    
+    try {
+        $sql= "SELECT * from product_order WHERE status='$status' ORDER BY cust_ID ASC";
+        $db = new db();
+        $db = $db->connect();
+        $stmt = $db->query($sql);
+        $orders = $stmt->fetchAll(PDO::FETCH_OBJ);
+        $db = null;
+        
+        echo json_encode($orders);
+    } catch (PDOException $e) {
+        $data = array("status" => "fail");
+        echo json_encode($data);
+    }
+    return $response;
+});
+
+
+//Update API
+$app->put('/updateOrder/{id}', function (Request $request, Response $response, array $args) {
+    $id = $args['id'];
+
+    $inputJSON = file_get_contents('php://input');
+    $input = json_decode($inputJSON, TRUE);
+
+    $custName = $input['cust_Name'];
+    $custHpn = $input['hpnNo'];
+    $cakeQuantity = $input['cakeQuantity'];
+    $cakeType = $input['cakeType'];
+    $cakeFlavour = $input['cakeFlavour'];
+    $cakeFilling = $input['cakeFilling'];
+    $cakeShape = $input['cakeShape'];
+    $cakeSize = $input['cakeSize'];
+    $cakeBoard = $input['cakeBoard'];
+    $cakePrice = $input['cakePrice'];
+    $orderDate = $input['orderDate'];
+    $dispatchDate = $input['dispatchDate'];
+    $dispatchTime = $input['dispatchTime'];
+    $dispatchDay = $input['time'];
+    $dispatchPlace = $input['dispatchPlace'];
+    $remark = $input['remark'];
+
+    $sql = "UPDATE product_order SET cust_Name=:custName, cust_HPN=:custHpn, quantity=:cakeQuantity, type=:cakeType, flavour=:cakeFlavour, filling=:cakeFilling,
+    shape=:cakeShape, size=:cakeSize, board=:cakeBoard, price=:cakePrice, orderDate=:orderDate, dispatchDate=:dispatchDate, 
+    dispatchTime=:dispatchTime, dispatchDay=:dispatchDay, dispatchPlace=:dispatchPlace, remark=:remark WHERE cust_ID='$id'";
+
+    try {
+        // Get DB Object
+        $db = new db();
+        // Connect
+        $db = $db->connect();
+
+        $stmt = $db->prepare($sql);
+
+        $stmt->bindParam(':custName', $custName);
+        $stmt->bindParam(':custHpn', $custHpn);
+        $stmt->bindParam(':cakeQuantity', $cakeQuantity);
+        $stmt->bindParam(':cakeType', $cakeType);
+        $stmt->bindParam(':cakeFlavour', $cakeFlavour);
+        $stmt->bindParam(':cakeFilling', $cakeFilling);
+        $stmt->bindParam(':cakeShape', $cakeShape);
+        $stmt->bindParam(':cakeSize', $cakeSize);
+        $stmt->bindParam(':cakeBoard', $cakeBoard);
+        $stmt->bindParam(':cakePrice', $cakePrice);
+        $stmt->bindParam(':orderDate', $orderDate);
+        $stmt->bindParam(':dispatchDate', $dispatchDate);
+        $stmt->bindParam(':dispatchTime', $dispatchTime);
+        $stmt->bindParam(':dispatchDay', $dispatchDay);
+        $stmt->bindParam(':dispatchPlace', $dispatchPlace);
+        $stmt->bindParam(':remark', $remark);
+
+        $stmt->execute();
+        $count = $stmt->rowCount();
+
+        $data = array(
+            "rowAffected" => $count,
+            "status" => "success"
+        );
+        echo json_encode($data);
+    } catch (PDOException $e) {
+        $data = array(
+            "status" => "fail"
+        );
+        echo json_encode($data);
+    }
+});
+
 
 
 // -------------------------------------------------------------------------------------------------------

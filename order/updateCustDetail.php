@@ -85,24 +85,8 @@
 		document.getElementById('sizeInput').style.display = 'none';
 		document.getElementById('boardInput').style.display = 'none';
 	}
-	function redirect(){
-		window.location = "viewOrder.php?page=1&method=4&searchValue=";
-	}
-	else{
-	document.getElementById('boardInput').style.display="none";
-	document.getElementById('cakeBoardOther').value=board;}
-	
-}
-function hidefield(){
- document.getElementById('typeInput').style.display='none';
- document.getElementById('flavourInput').style.display='none';
- document.getElementById('fillingInput').style.display='none';
- document.getElementById('shapeInput').style.display='none';
- document.getElementById('sizeInput').style.display='none';
- document.getElementById('boardInput').style.display='none';
-}
 
-function redirect(){
+	function redirect() {
 		window.location = "viewOrder.php?page=1&method=4&searchValue=";
 	}
 </script>
@@ -114,49 +98,6 @@ if (isset($_POST['updateOrder'])) {
 }
 
 
-?>
-<style>
-	div.one {
-		background-color: white;
-		padding: 10px;
-		padding-top: 0px;
-		padding-bottom: 20px;
-		margin-top: 10;
-		border-radius: 5px;
-		min-height: 680px;
-	}
-
-	.inner {
-		padding: 5rem;
-	}
-</style>
-
-<body>
-	<div class="col-sm-9">
-		<div class="one">
-			<h2>Customer Order Details</h2>
-			<div class="inner">
-
-				<?php
-
-$row= mysqli_fetch_assoc($custDetail);
-$custID= $row['cust_ID'];
-$custName= $row['cust_Name'];
-$custHpn= $row['cust_HPN'];
-$cakeQuantity= $row['quantity'];
-$cakeType= $row['type'];
-$cakeFlavour= $row['flavour'];
-$cakeFilling= $row['filling'];
-$cakeShape= $row['shape'];
-$cakeSize= $row['size'];
-$cakeBoard= $row['board'];
-$cakePrice= $row['price'];
-$orderDate= $row['orderDate']; 
-$dispatchDate= $row['dispatchDate'];
-$dispatchTime= $row['dispatchTime'];
-$dispatchDay= $row['dispatchDay'];
-$dispatchPlace= $row['dispatchPlace'];
-$remark= $row['remark'];
 
 ?>
 <style>
@@ -201,23 +142,65 @@ $remark= $row['remark'];
 				$dispatchDay = $row['dispatchDay'];
 				$dispatchPlace = $row['dispatchPlace'];
 				$remark = $row['remark'];
+				echo '<body onload="hidefield()"><div class="wrapper fadeInDown" id="formContent">'; // body
+				echo '<form id="updateDetails" enctype="multipart/form-data" method="post">';  // form
+				echo "<input type='hidden' name='cust_ID' value='$custID'>";
+				echo 'Customer Name: <input type="text" name="cust_Name" value="' . $custName . '" required><br><br>';
+				echo 'Customer HPN: <input type="text" name="hpnNo" value="' . $custHpn . '" required><br><br>';
+				echo 'Cake Quantity: <input type="number" name="cakeQuantity" value="' . $cakeQuantity . '" required><br><br>';
 
-echo '<br><br>Cake Price: <input type="text" name="cakePrice" value="'.$cakePrice.'" required><br><br>';
-echo 'Order Date: <input type="date" name="orderDate" value="'.$orderDate.'" required><br><br>';
-echo 'Dispatch Date: <input type="date" name="dispatchDate" value="'.$dispatchDate.'" required><br><br>';
-echo 'Dispatch Time: <input type="time" name="dispatchTime" value="'.$dispatchTime.'" required>';
-day($dispatchDay); // AM/PM
-echo 'Dispatch Place: <input type= "text" name= "dispatchPlace" value="'.$dispatchPlace.'" required><br><br>';
-echo "Remark: <br><textarea style='resize:none' name='remark' rows='10'cols='30' >$remark</textarea><br><br>";
-echo '<input type="button" name="backToView" onclick="redirect()" value="Back">';
-echo '<input type="submit" name="updateDetail" value="UPDATE">';
-echo '</form>';
-echo '</body></div>';
-?>
-<?php
-function type($type){		// get cake type
-	if($type=="Sponge"){
-		echo '<select class="form-control" id="type" name="cakeType" onchange="cakeTypeF(this.options[this.selectedIndex].value)" required>
+				// cakeType <select>
+				echo 'Cake Type: ';
+				type($cakeType);
+				echo "<input type='hidden' name='otherCakeType' id='cakeTypeOther' value=''>"; 			// hidden cakeType
+				echo '<div id="typeInput"><input type="text" name="otherCakeTypeInput"></div>';
+
+				// cakeFlavour <select>
+				echo '<br><br>Cake Flavour: ';
+				flavour($cakeFlavour);
+				echo "<input type='hidden' name='otherCakeFlavour' id='cakeFlavourOther'>"; 			// hidden cakeFlavour
+				echo '<div id="flavourInput"><input type="text" name="otherCakeFlavourInput"></div>';
+
+				// cakeFilling <select>
+				echo '<br><br>Cake Filling : ';
+				filling($cakeFilling);
+				echo "<input type='hidden' name='otherCakeFilling' id='cakeFillingOther'>"; 			// hidden cakeFilling
+				echo '<div id="fillingInput"><input type="text" name="otherCakeFillingInput"></div>';
+
+				// cakeShape <select>
+				echo '<br><br>Cake Shape: ';
+				shape($cakeShape);
+				echo "<input type='hidden' name='otherCakeShape' id='cakeShapeOther'>"; 			// hidden cakeShape
+				echo '<div id="shapeInput"><input type="text" name="otherCakeShapeInput"></div>';
+
+				// cakeSize <select>
+				echo '<br><br>Cake Size: ';
+				size($cakeSize);
+				echo "<input type='hidden' name='otherCakeSize' id='cakeSizeOther'>"; 			// hidden cakeShape
+				echo '<div id="sizeInput"><input type="text" name="otherCakeSizeInput"></div>';
+
+				// cakeBoard <select>
+				echo '<br><br>Cake Board: ';
+				board($cakeBoard);
+				echo "<input type='hidden' name='otherCakeBoard' id='cakeBoardOther'>"; 			// hidden cakeBoard
+				echo '<div id="boardInput"><input type="text" name="otherCakeBoardInput"></div>';
+				echo '<br><br>Cake Price: <input type="text" name="cakePrice" value="' . $cakePrice . '" required><br><br>';
+				echo 'Order Date: <input type="date" name="orderDate" value="' . $orderDate . '" required><br><br>';
+				echo 'Dispatch Date: <input type="date" name="dispatchDate" value="' . $dispatchDate . '" required><br><br>';
+				echo 'Dispatch Time: <input type="time" name="dispatchTime" value="' . $dispatchTime . '" required>';
+				day($dispatchDay); // AM/PM
+				echo 'Dispatch Place: <input type= "text" name= "dispatchPlace" value="' . $dispatchPlace . '" required><br><br>';
+				echo "Remark: <br><textarea style='resize:none' name='remark' rows='10'cols='30' >$remark</textarea><br><br>";
+				echo '<input type="button" name="backToView" onclick="redirect()" value="Back">';
+				echo '<input type="submit" name="updateDetail" value="UPDATE">';
+				echo '</form>';
+				echo '</body></div>';
+				?>
+				<?php
+				function type($type)
+				{		// get cake type
+					if ($type == "Sponge") {
+						echo '<select class="form-control" id="type" name="cakeType" onchange="cakeTypeF(this.options[this.selectedIndex].value)" required>
 		<option value="">- Please Select a Cake Type -</option>
 		<option value="Sponge" selected>Sponge</option>
 		<option value="Butter">Butter</option>
@@ -694,3 +677,40 @@ function type($type){		// get cake type
 						echo '<select name="time" required><option value="AM">AM</option><option value="PM" selected>PM</option></select><br><br>';
 				}
 				?>
+
+				<script>
+					$("#updateDetails").submit(function(event) {
+						event.preventDefault();
+						var urlstring;
+						datas = new FormData(event.target);
+						fromJson = Object.fromEntries(datas.entries());
+						urlstring = fromJson['cust_ID'];
+						fromJson = JSON.stringify(fromJson);
+						console.log(fromJson);
+						
+						$.ajax({
+							type: "PUT",
+							url: "http://localhost/bms/api/updateOrder/" + urlstring,
+							data: fromJson,
+							dataType: "json",
+							contentType: "application/json",
+
+							success: function(data, status, xhr) {
+								if (status == 'success') {
+									alert("ok, successfully add data");
+									window.location.href = "viewOrder.php?page=1&method=4&searchValue=";
+								} else {
+									alert(status);
+									alert("fail to insert, " + data.errormessage);
+								}
+							},
+
+							error: function(xhr, resp, text) {
+								alert("error " + xhr.error + ", " + resp + ", " + text);
+								console.log(xhr.responseText);
+								console.log(resp);
+								console.log(text);
+							},
+						});
+					});
+				</script>

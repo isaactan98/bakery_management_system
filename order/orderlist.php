@@ -440,7 +440,6 @@ $custHpn = $_POST['hpnNo'];
 						<center>
 							<div class="row">
 								<input type="submit" name="submitOrder" value="Submit Order">
-								<input type="submit" name="nextOrder" value="More Order">
 							</div>
 						</center>
 					</form>
